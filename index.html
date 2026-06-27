@@ -102,7 +102,7 @@
       </div>
 
       <div class="collage-band">
-        <div class="collage reveal">
+        <div class="collage">
           <div class="panel panel-1">
             <img src="assets/experience.jpg" alt="" />
           </div>
@@ -497,6 +497,22 @@
       document
         .querySelectorAll('.reveal, .stat-card')
         .forEach((el) => revealObserver.observe(el));
+
+      // Collage panel stagger animation
+      const collageEl = document.querySelector('.collage');
+      if (collageEl) {
+        const collageObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return;
+              collageEl.classList.add('panels-visible');
+              collageObserver.unobserve(collageEl);
+            });
+          },
+          { threshold: 0.1 },
+        );
+        collageObserver.observe(collageEl);
+      }
 
       // Courses sticky scroll
       (function () {

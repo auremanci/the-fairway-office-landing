@@ -372,6 +372,33 @@ h2.headline--cream {
   object-fit: cover;
 }
 
+@keyframes panel-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.collage .panel {
+  opacity: 0;
+}
+
+.collage.panels-visible .panel-3 {
+  animation: panel-slide-down 0.85s var(--ease) 0s forwards;
+}
+.collage.panels-visible .panel-2,
+.collage.panels-visible .panel-4 {
+  animation: panel-slide-down 0.85s var(--ease) 0.35s forwards;
+}
+.collage.panels-visible .panel-1,
+.collage.panels-visible .panel-5 {
+  animation: panel-slide-down 0.85s var(--ease) 0.7s forwards;
+}
+
 /* Panel geometry from the Figma layout (1246×533 board, 1245×801 source image) */
 .panel-1 {
   left: 0;
