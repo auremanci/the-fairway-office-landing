@@ -93,7 +93,7 @@ h2.headline--cream {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 23px 47px;
+  padding: 20px 32px;
   border-radius: 58px;
   text-decoration: none;
   white-space: nowrap;
@@ -631,7 +631,7 @@ h2.courses-title.courses-title--small {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 36px;
+  padding: 20px 32px;
   border-radius: 58px;
   background: var(--gold);
   font-family: var(--sans);
@@ -642,11 +642,18 @@ h2.courses-title.courses-title--small {
   color: var(--green);
   text-decoration: none;
   white-space: nowrap;
-  transition: filter 0.3s;
+  transition:
+    filter 0.3s,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s;
 }
 
 .course-cta:hover {
-  filter: brightness(0.95);
+  filter: brightness(1.1);
+  transform: scale(1.045);
+  box-shadow:
+    0 10px 32px rgba(192, 165, 119, 0.4),
+    0 0 0 3px rgba(192, 165, 119, 0.18);
 }
 
 /* ── Right logo nav ── */
