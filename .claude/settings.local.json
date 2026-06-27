@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\aurem\\\\Documents\\\\projects\\\\the-fairway-office\" /B)",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__91e49575-c666-49bb-a6fc-6dd96d14f4a3__get_metadata",
+      "mcp__91e49575-c666-49bb-a6fc-6dd96d14f4a3__get_screenshot",
+      "mcp__Claude_in_Chrome__get_page_text",
+      "mcp__91e49575-c666-49bb-a6fc-6dd96d14f4a3__get_design_context",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
