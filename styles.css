@@ -40,7 +40,7 @@ body {
 h2.headline {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(3rem, 5.42vw, 82px);
+  font-size: clamp(4rem, 5.42vw, 82px);
   line-height: 1.05;
   letter-spacing: 2px;
   color: var(--gold);
@@ -508,7 +508,7 @@ h2.headline--cream {
 }
 
 .course-bg.active {
-  opacity: 1;
+  opacity: 0.65;
 }
 
 .courses-sticky::before {
@@ -516,9 +516,7 @@ h2.headline--cream {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 69%),
-    linear-gradient(to left, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 27%);
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .courses-inner {
@@ -576,7 +574,7 @@ h2.courses-title.courses-title--small {
 
 .course-name {
   font-family: var(--serif);
-  font-size: clamp(3rem, 5.42vw, 82px);
+  font-size: clamp(4rem, 5.42vw, 82px);
   font-weight: 500;
   letter-spacing: 2px;
   color: var(--cream);
@@ -1422,12 +1420,13 @@ footer {
   }
 
   .course-stat-value {
-    font-size: clamp(1.5rem, 7vw, 2.5rem);
+    font-size: clamp(1.5rem, 9vw, 2.5rem);
     text-align: center;
+    font-weight: 700;
   }
 
   .course-stat-label {
-    font-size: 12px;
+    font-size: 16px;
     letter-spacing: 1.5px;
     text-align: center;
     line-height: 1.3;
