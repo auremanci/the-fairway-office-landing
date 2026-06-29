@@ -887,29 +887,33 @@ h2.courses-title.courses-title--small {
   max-width: 1512px;
   margin: 0 auto;
   padding: 159px 0 137px 156px;
-  display: grid;
-  grid-template-columns: 569px 672px;
-  justify-content: space-between;
-  gap: 60px;
-}
-
-.app-copy {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.app-copy .stack {
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 672px;
+  gap: 80px;
+  align-items: start;
+  padding-right: 158px;
+}
+
+.app-copy {
   display: flex;
   flex-direction: column;
   gap: 120px;
 }
 
-#app-section > img {
+.app-copy .body-text {
+  max-width: 569px;
+}
+
+.app-grid > img {
   width: 672px;
   height: 678px;
   object-fit: cover;
-  margin-top: 256px;
 }
 
 /* ── FOOTER / CONTACT ────────────────────────────────── */
@@ -1159,14 +1163,17 @@ footer {
   }
 
   #app-section {
-    grid-template-columns: 1fr;
     padding: 100px 6vw;
   }
 
-  #app-section > img {
+  .app-grid {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+  }
+
+  .app-grid > img {
     width: 100%;
     height: auto;
-    margin-top: 0;
   }
 
   .footer-eyebrow {
@@ -1353,7 +1360,7 @@ footer {
     font-size: 19px;
   }
 
-  .app-copy .stack {
+  .app-copy {
     gap: 48px;
   }
   #app-section {
