@@ -1215,6 +1215,7 @@ footer {
     width: 100%;
     margin-top: auto;
     animation-name: fade-up-static;
+    translate: 0;
   }
 
   .hero-lead {
@@ -1223,12 +1224,14 @@ footer {
     margin-top: 28px;
     font-size: 17px;
     animation-name: fade-up-static;
+    translate: 0;
   }
 
   .hero-cta {
     position: static;
     margin-top: 40px;
     animation-name: fade-up-static;
+    translate: 0;
   }
 
   #stats {
