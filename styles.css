@@ -364,6 +364,7 @@ h2.headline--cream {
   position: absolute;
   overflow: hidden;
   background: #fff;
+  opacity: 0;
 }
 
 .collage .panel img {
@@ -383,20 +384,16 @@ h2.headline--cream {
   }
 }
 
-.collage .panel {
-  opacity: 0;
-}
-
 .collage.panels-visible .panel-3 {
-  animation: panel-slide-down 0.85s var(--ease) 0s forwards;
+  animation: panel-slide-down 0.85s var(--ease) 0.35s forwards;
 }
 .collage.panels-visible .panel-2,
 .collage.panels-visible .panel-4 {
-  animation: panel-slide-down 0.85s var(--ease) 0.35s forwards;
+  animation: panel-slide-down 0.85s var(--ease) 0.7s forwards;
 }
 .collage.panels-visible .panel-1,
 .collage.panels-visible .panel-5 {
-  animation: panel-slide-down 0.85s var(--ease) 0.7s forwards;
+  animation: panel-slide-down 0.85s var(--ease) 1s forwards;
 }
 
 /* Panel geometry from the Figma layout (1246×533 board, 1245×801 source image) */
@@ -533,7 +530,7 @@ h2.headline--cream {
 .courses-title {
   position: absolute;
   left: 158px;
-  top: calc(50vh - 270px);
+  top: calc(50vh - 370px);
   transform-origin: left center;
   transition:
     font-size 0.65s var(--ease),
@@ -544,7 +541,7 @@ h2.headline--cream {
 
 h2.courses-title.courses-title--small {
   font-size: clamp(1.5rem, 2.71vw, 41px);
-  transform: translateY(-28px);
+  transform: translateY(0px);
   letter-spacing: 5px;
 }
 
@@ -609,7 +606,7 @@ h2.courses-title.courses-title--small {
 .course-stat-value {
   display: block;
   font-family: var(--serif);
-  font-size: clamp(2rem, 3.57vw, 54px);
+  font-size: clamp(2rem, 3.57vw, 50px);
   font-weight: 600;
   letter-spacing: 2px;
   text-align: center;
@@ -652,6 +649,11 @@ h2.courses-title.courses-title--small {
   box-shadow:
     0 10px 32px rgba(192, 165, 119, 0.4),
     0 0 0 3px rgba(192, 165, 119, 0.18);
+}
+
+/* Course separator — mobile only, hidden on desktop */
+.course-separator {
+  display: none;
 }
 
 /* ── Right logo nav ── */
@@ -1366,24 +1368,72 @@ footer {
     pointer-events: none;
   }
 
+  /* Vignette oscurece bordes top/bottom para fundirse con separadores */
+  .course-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 39, 36, 0.88) 0%,
+      transparent 22%,
+      transparent 76%,
+      rgba(16, 39, 36, 0.92) 100%
+    );
+    pointer-events: none;
+  }
+
   .course-panel:nth-child(1) {
     --course-bg: url('assets/course-bg-1.jpg');
   }
-  .course-panel:nth-child(2) {
+  .course-panel:nth-child(3) {
     --course-bg: url('assets/course-bg-2.jpg');
   }
-  .course-panel:nth-child(3) {
+  .course-panel:nth-child(5) {
     --course-bg: url('assets/course-bg-3.jpg');
   }
-  .course-panel:nth-child(4) {
+  .course-panel:nth-child(7) {
     --course-bg: url('assets/course-bg-4.jpg');
   }
-  .course-panel:nth-child(5) {
+  .course-panel:nth-child(9) {
     --course-bg: url('assets/course-bg-5.jpg');
   }
 
   .courses-nav {
     display: none;
+  }
+
+  .course-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6vw;
+    height: 200px;
+    margin-top: -100px;
+    margin-bottom: -100px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .course-separator::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(16, 39, 36, 0.25) 38%,
+      rgba(16, 39, 36, 0.25) 62%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .course-separator__divider {
+    width: min(848px, 80vw);
+    height: 16px;
+    position: relative;
+    z-index: 1;
   }
 
   .course-name {
