@@ -251,19 +251,10 @@ h2.headline--cream {
   padding: 82px 0;
 }
 
-/* ── ABOUT ───────────────────────────────────────────── */
-#about {
-  padding-top: 80px;
-}
-
-#about .eyebrow {
-  margin-bottom: 16px;
-}
-
 /* ── STAT CARDS ──────────────────────────────────────── */
 #stats {
   max-width: 1512px;
-  margin: 139px auto 0;
+  margin: 100px auto 0;
   padding: 0 32px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
