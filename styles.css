@@ -1530,6 +1530,34 @@ footer {
   .footer-left {
     gap: 24px;
   }
+
+  /* Mobile scroll-reveal for courses section */
+  .m-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 1.3s var(--ease),
+      transform 1.3s var(--ease);
+  }
+  .m-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .m-reveal.delay-1 {
+    transition-delay: 0.25s;
+  }
+  .m-reveal.delay-2 {
+    transition-delay: 0.5s;
+  }
+  /* .courses-overview-text.active has specificity 0,2,0 — override it */
+  .courses-overview-text.m-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  .courses-overview-text.m-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 480px) {
