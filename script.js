@@ -30,22 +30,24 @@ if (collageEl) {
   collageObserver.observe(collageEl);
 }
 
-// Mobile courses reveal
-if (globalThis.matchMedia('(max-width: 960px)').matches) {
-  const mobileRevealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('visible');
-        mobileRevealObserver.unobserve(e.target);
-      });
-    },
-    { threshold: 0.1 },
-  );
-  document
-    .querySelectorAll('.m-reveal')
-    .forEach((el) => mobileRevealObserver.observe(el));
-}
+// Mobile courses reveal (the opacity:0 rule only exists under the
+// max-width:960px media query, so observing unconditionally is a
+// no-op on wider viewports and avoids relying on a one-time,
+// load-time matchMedia check that can race with the viewport
+// settling in Safari/Firefox)
+const mobileRevealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      mobileRevealObserver.unobserve(e.target);
+    });
+  },
+  { threshold: 0.1 },
+);
+document
+  .querySelectorAll('.m-reveal')
+  .forEach((el) => mobileRevealObserver.observe(el));
 
 // Courses sticky scroll
 (function () {
