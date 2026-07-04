@@ -27,38 +27,61 @@ http
     const ext = path.extname(filePath);
     const contentType = MIME[ext] || 'application/octet-stream';
 
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
+    fs.stat(filePath, (err, stat) => {
+      if (err || !stat.isFile()) {
         res.writeHead(404);
         res.end('Not found');
         return;
       }
 
-      const headers = { 'Content-Type': contentType };
-      if (ext === '.mp4') {
-        const stat = fs.statSync(filePath);
-        const range = req.headers.range;
-        if (range) {
-          const [startStr, endStr] = range.replace(/bytes=/, '').split('-');
-          const start = Number.parseInt(startStr, 10);
-          const end = endStr ? Number.parseInt(endStr, 10) : stat.size - 1;
-          const chunkSize = end - start + 1;
-          const stream = fs.createReadStream(filePath, { start, end });
-          res.writeHead(206, {
-            'Content-Range': `bytes ${start}-${end}/${stat.size}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Length': chunkSize,
-            'Content-Type': 'video/mp4',
+      const range = req.headers.range;
+      if (range && ext === '.mp4') {
+        // Parse "bytes=start-end", "bytes=start-" and "bytes=-suffix"
+        const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+        let start;
+        let end;
+        if (match && (match[1] !== '' || match[2] !== '')) {
+          if (match[1] === '') {
+            // Suffix range: last N bytes
+            const suffix = Number.parseInt(match[2], 10);
+            start = Math.max(0, stat.size - suffix);
+            end = stat.size - 1;
+          } else {
+            start = Number.parseInt(match[1], 10);
+            end =
+              match[2] === ''
+                ? stat.size - 1
+                : Math.min(Number.parseInt(match[2], 10), stat.size - 1);
+          }
+        }
+        if (start === undefined || start > end || start >= stat.size) {
+          res.writeHead(416, {
+            'Content-Range': `bytes */${stat.size}`,
           });
-          stream.pipe(res);
+          res.end();
           return;
         }
-        headers['Content-Length'] = stat.size;
-        headers['Accept-Ranges'] = 'bytes';
+        res.writeHead(206, {
+          'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': end - start + 1,
+          'Content-Type': contentType,
+        });
+        fs.createReadStream(filePath, { start, end })
+          .on('error', () => res.destroy())
+          .pipe(res);
+        return;
       }
 
+      const headers = {
+        'Content-Type': contentType,
+        'Content-Length': stat.size,
+      };
+      if (ext === '.mp4') headers['Accept-Ranges'] = 'bytes';
       res.writeHead(200, headers);
-      res.end(data);
+      fs.createReadStream(filePath)
+        .on('error', () => res.destroy())
+        .pipe(res);
     });
   })
   .listen(PORT, () =>

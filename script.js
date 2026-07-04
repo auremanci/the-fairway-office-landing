@@ -7,10 +7,25 @@
   heroVideo.muted = true;
   const tryPlay = () => heroVideo.play().catch(() => {});
   tryPlay();
+  heroVideo.addEventListener('canplay', tryPlay);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && heroVideo.paused) tryPlay();
   });
   window.addEventListener('pageshow', tryPlay);
+  // Overlays (.hero-shade/.hero-inner) sit on top of the video, so a
+  // tap on the blocked-autoplay icon never reaches the element; treat
+  // any first interaction anywhere as the unlock gesture instead
+  const onFirstGesture = () => {
+    heroVideo
+      .play()
+      .then(() => {
+        document.removeEventListener('pointerdown', onFirstGesture);
+        document.removeEventListener('touchend', onFirstGesture);
+      })
+      .catch(() => {});
+  };
+  document.addEventListener('pointerdown', onFirstGesture);
+  document.addEventListener('touchend', onFirstGesture);
 })();
 
 // Scroll reveal
