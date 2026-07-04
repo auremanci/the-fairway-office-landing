@@ -1,3 +1,18 @@
+// Hero video autoplay enforcement (Safari/iPadOS at tablet widths can
+// silently block autoplay and fall back to showing the native play
+// button instead of retrying on its own)
+(function () {
+  const heroVideo = document.querySelector('#hero video');
+  if (!heroVideo) return;
+  heroVideo.muted = true;
+  const tryPlay = () => heroVideo.play().catch(() => {});
+  tryPlay();
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && heroVideo.paused) tryPlay();
+  });
+  window.addEventListener('pageshow', tryPlay);
+})();
+
 // Scroll reveal
 const revealObserver = new IntersectionObserver(
   (entries) => {
