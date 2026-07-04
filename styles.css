@@ -1047,7 +1047,6 @@ footer {
 
   .course-panels {
     top: calc(50vh - 207px);
-    bottom: 104px;
     left: 50%;
     transform: translateX(-50%);
     width: 88vw;
