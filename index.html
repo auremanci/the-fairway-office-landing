@@ -15,7 +15,10 @@
   <body id="top">
     <!-- ── HERO ────────────────────────────────────── -->
     <section id="hero">
+      <!-- src directly on <video> (not <source> child): Safari's autoplay
+           evaluation can miss deferred source selection -->
       <video
+        src="FairwayOffice - HD 720p.mp4"
         autoplay
         muted
         loop
@@ -23,9 +26,7 @@
         webkit-playsinline="true"
         disablepictureinpicture
         preload="auto"
-      >
-        <source src="FairwayOffice - HD 720p.mp4" type="video/mp4" />
-      </video>
+      ></video>
       <div class="hero-shade"></div>
       <div class="hero-fade"></div>
 

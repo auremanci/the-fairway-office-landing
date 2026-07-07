@@ -4,10 +4,28 @@
 (function () {
   const heroVideo = document.querySelector('#hero video');
   if (!heroVideo) return;
+  // Safari checks the muted IDL property (not just the attribute) when
+  // deciding whether muted autoplay is allowed
+  heroVideo.defaultMuted = true;
   heroVideo.muted = true;
-  const tryPlay = () => heroVideo.play().catch(() => {});
+  const tryPlay = () => {
+    if (!heroVideo.paused) return;
+    heroVideo.play().catch(() => {});
+  };
   tryPlay();
-  heroVideo.addEventListener('canplay', tryPlay);
+  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach((ev) =>
+    heroVideo.addEventListener(ev, tryPlay),
+  );
+  // Bounded retry: Safari sometimes rejects the first play() calls made
+  // before enough data is buffered, then never re-attempts on its own
+  let attempts = 0;
+  const retryTimer = setInterval(() => {
+    if (!heroVideo.paused || ++attempts > 20) {
+      clearInterval(retryTimer);
+      return;
+    }
+    tryPlay();
+  }, 400);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && heroVideo.paused) tryPlay();
   });
