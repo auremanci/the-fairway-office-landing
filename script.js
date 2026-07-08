@@ -26,12 +26,25 @@
     }
     tryPlay();
   }, 400);
-  console.log({
-    paused: heroVideo.paused,
-    muted: heroVideo.muted,
-    autoplay: heroVideo.autoplay,
-    readyState: heroVideo.readyState,
-  });
+  heroVideo.addEventListener(
+    'loadeddata',
+    async () => {
+      try {
+        await heroVideo.play();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    { once: true },
+  );
+  setTimeout(() => {
+    console.log({
+      readyState: v.readyState,
+      paused: v.paused,
+      currentTime: v.currentTime,
+      networkState: v.networkState,
+    });
+  }, 3000);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && heroVideo.paused) tryPlay();
   });
