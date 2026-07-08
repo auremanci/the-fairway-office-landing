@@ -19,9 +19,12 @@
   heroVideo.addEventListener('loadedmetadata', tryPlay);
   heroVideo.addEventListener('canplay', tryPlay);
 
-  // Last resort: user's Safari may have "Never Auto-Play" set for the
-  // site; start on the first interaction instead of showing a frozen frame
+  // Last resort: Safari blocks autoplay when the user has "Never
+  // Auto-Play" or the OS-level Reduce Motion setting enabled. With Reduce
+  // Motion the media is not even fetched (readyState 0), so force a
+  // load() before playing on the first interaction.
   const kick = () => {
+    if (heroVideo.readyState === 0) heroVideo.load();
     tryPlay();
     if (!heroVideo.paused) {
       window.removeEventListener('pointerdown', kick);
