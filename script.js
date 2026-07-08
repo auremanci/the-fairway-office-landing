@@ -4,67 +4,38 @@
 (function () {
   const heroVideo = document.querySelector('#hero video');
   if (!heroVideo) return;
-  // Safari checks the muted IDL property (not just the attribute) when
-  // deciding whether muted autoplay is allowed
+
   heroVideo.defaultMuted = true;
   heroVideo.muted = true;
-
-  const tryPlay = async () => {
-    if (!heroVideo.paused) return;
-
-    try {
-      await heroVideo.play();
-      console.log('play OK');
-    } catch (e) {
-      console.log(e.name, e.message);
-    }
-  };
+  heroVideo.playsInline = true;
 
   heroVideo.addEventListener(
-    'canplay',
-    () => {
-      console.log('canplay -> intentando play()');
-      tryPlay();
+    'loadedmetadata',
+    async () => {
+      console.log('loadedmetadata');
+
+      try {
+        await heroVideo.play();
+        console.log('AUTOPLAY OK');
+      } catch (e) {
+        console.error('AUTOPLAY ERROR', e.name, e.message);
+      }
     },
     { once: true },
   );
-  heroVideo.addEventListener(
-    'loadeddata',
+
+  document.addEventListener(
+    'pointerdown',
     async () => {
       try {
         await heroVideo.play();
+        console.log('USER PLAY OK');
       } catch (e) {
         console.error(e);
       }
     },
     { once: true },
   );
-  setTimeout(() => {
-    console.log({
-      readyState: heroVideo.readyState,
-      paused: heroVideo.paused,
-      currentTime: heroVideo.currentTime,
-      networkState: heroVideo.networkState,
-    });
-  }, 3000);
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && heroVideo.paused) tryPlay();
-  });
-  window.addEventListener('pageshow', tryPlay);
-  // Overlays (.hero-shade/.hero-inner) sit on top of the video, so a
-  // tap on the blocked-autoplay icon never reaches the element; treat
-  // any first interaction anywhere as the unlock gesture instead
-  const onFirstGesture = () => {
-    heroVideo
-      .play()
-      .then(() => {
-        document.removeEventListener('pointerdown', onFirstGesture);
-        document.removeEventListener('touchend', onFirstGesture);
-      })
-      .catch(() => {});
-  };
-  document.addEventListener('pointerdown', onFirstGesture);
-  document.addEventListener('touchend', onFirstGesture);
 })();
 
 // Scroll reveal
