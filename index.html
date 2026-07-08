@@ -18,15 +18,15 @@
       <!-- src directly on <video> (not <source> child): Safari's autoplay
            evaluation can miss deferred source selection -->
       <video
-        src="FairwayOffice - HD 720p.mp4"
         autoplay
         muted
-        loop
         playsinline
-        webkit-playsinline="true"
-        disablepictureinpicture
+        loop
         preload="auto"
-      ></video>
+        style="width: 100vw; height: 100vh; object-fit: cover"
+      >
+        <source src="FairwayOffice - HD 720p.mp4" type="video/mp4" />
+      </video>
       <div class="hero-shade"></div>
       <div class="hero-fade"></div>
 

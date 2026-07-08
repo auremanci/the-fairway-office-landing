@@ -13,8 +13,13 @@
     heroVideo.play().catch(() => {});
   };
   tryPlay();
-  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach((ev) =>
-    heroVideo.addEventListener(ev, tryPlay),
+  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach(
+    (ev) => {
+      heroVideo.addEventListener(evt, () => {
+        console.log(evt);
+      });
+      heroVideo.addEventListener(ev, tryPlay);
+    },
   );
   // Bounded retry: Safari sometimes rejects the first play() calls made
   // before enough data is buffered, then never re-attempts on its own
@@ -39,10 +44,10 @@
   );
   setTimeout(() => {
     console.log({
-      readyState: v.readyState,
-      paused: v.paused,
-      currentTime: v.currentTime,
-      networkState: v.networkState,
+      readyState: heroVideo.readyState,
+      paused: heroVideo.paused,
+      currentTime: heroVideo.currentTime,
+      networkState: heroVideo.networkState,
     });
   }, 3000);
   document.addEventListener('visibilitychange', () => {
