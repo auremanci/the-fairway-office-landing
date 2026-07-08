@@ -26,6 +26,12 @@
     }
     tryPlay();
   }, 400);
+  console.log({
+    paused: heroVideo.paused,
+    muted: heroVideo.muted,
+    autoplay: heroVideo.autoplay,
+    readyState: heroVideo.readyState,
+  });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && heroVideo.paused) tryPlay();
   });
