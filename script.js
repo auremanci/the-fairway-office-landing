@@ -8,29 +8,26 @@
   // deciding whether muted autoplay is allowed
   heroVideo.defaultMuted = true;
   heroVideo.muted = true;
-  const tryPlay = () => {
+
+  const tryPlay = async () => {
     if (!heroVideo.paused) return;
-    heroVideo.play().catch(() => {});
-  };
-  tryPlay();
-  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'].forEach(
-    (ev) => {
-      heroVideo.addEventListener(evt, () => {
-        console.log(evt);
-      });
-      heroVideo.addEventListener(ev, tryPlay);
-    },
-  );
-  // Bounded retry: Safari sometimes rejects the first play() calls made
-  // before enough data is buffered, then never re-attempts on its own
-  let attempts = 0;
-  const retryTimer = setInterval(() => {
-    if (!heroVideo.paused || ++attempts > 20) {
-      clearInterval(retryTimer);
-      return;
+
+    try {
+      await heroVideo.play();
+      console.log('play OK');
+    } catch (e) {
+      console.log(e.name, e.message);
     }
-    tryPlay();
-  }, 400);
+  };
+
+  heroVideo.addEventListener(
+    'canplay',
+    () => {
+      console.log('canplay -> intentando play()');
+      tryPlay();
+    },
+    { once: true },
+  );
   heroVideo.addEventListener(
     'loadeddata',
     async () => {
