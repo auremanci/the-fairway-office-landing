@@ -1,6 +1,6 @@
-// Hero video autoplay enforcement (Safari/iPadOS at tablet widths can
-// silently block autoplay and fall back to showing the native play
-// button instead of retrying on its own)
+// Hero video autoplay enforcement (desktop Safari can reject declarative
+// autoplay even with muted+playsinline; an explicit play() call after the
+// media is ready succeeds where the attribute alone does not)
 (function () {
   const heroVideo = document.querySelector('#hero video');
   if (!heroVideo) return;
@@ -8,6 +8,30 @@
   heroVideo.defaultMuted = true;
   heroVideo.muted = true;
   heroVideo.playsInline = true;
+
+  function tryPlay() {
+    if (!heroVideo.paused) return;
+    const p = heroVideo.play();
+    if (p) p.catch(() => {});
+  }
+
+  tryPlay();
+  heroVideo.addEventListener('loadedmetadata', tryPlay);
+  heroVideo.addEventListener('canplay', tryPlay);
+
+  // Last resort: user's Safari may have "Never Auto-Play" set for the
+  // site; start on the first interaction instead of showing a frozen frame
+  const kick = () => {
+    tryPlay();
+    if (!heroVideo.paused) {
+      window.removeEventListener('pointerdown', kick);
+      window.removeEventListener('scroll', kick);
+      window.removeEventListener('keydown', kick);
+    }
+  };
+  window.addEventListener('pointerdown', kick, { passive: true });
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('keydown', kick);
 })();
 
 // Scroll reveal
