@@ -8,34 +8,6 @@
   heroVideo.defaultMuted = true;
   heroVideo.muted = true;
   heroVideo.playsInline = true;
-
-  heroVideo.addEventListener(
-    'loadedmetadata',
-    async () => {
-      console.log('loadedmetadata');
-
-      try {
-        await heroVideo.play();
-        console.log('AUTOPLAY OK');
-      } catch (e) {
-        console.error('AUTOPLAY ERROR', e.name, e.message);
-      }
-    },
-    { once: true },
-  );
-
-  document.addEventListener(
-    'pointerdown',
-    async () => {
-      try {
-        await heroVideo.play();
-        console.log('USER PLAY OK');
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    { once: true },
-  );
 })();
 
 // Scroll reveal
