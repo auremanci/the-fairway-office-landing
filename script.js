@@ -9,32 +9,25 @@
   heroVideo.muted = true;
   heroVideo.playsInline = true;
 
-  // Safari renders an MP4 inside <img> as an animated image (like a GIF),
-  // and images are exempt from the autoplay policy. When Safari refuses
-  // play(), covering the video with an <img> of the same MP4 keeps the
-  // hero moving AND hides Safari's native play button (an image never has
-  // one). Removed as soon as a real user gesture lets play() succeed.
-  let fallbackImg = null;
+  // Safari renders an MP4 poster as an animated image (like a GIF), and
+  // images are exempt from the autoplay policy. When Safari refuses
+  // play(), the video itself becomes the poster so the hero keeps moving.
+  // Removing the src as well leaves the element with no playable media,
+  // so Safari has nothing to offer its native play button for; the real
+  // src comes back on the first user gesture, when play() is allowed.
+  const HERO_SRC = 'FairwayOffice - HD 720p.mp4';
+  let blocked = false;
   function applyAnimatedPoster() {
-    if (fallbackImg) return;
+    if (blocked) return;
     const isSafari = /^((?!chrome|android).)*safari/i.test(
       navigator.userAgent,
     );
     if (!isSafari) return;
-    fallbackImg = document.createElement('img');
-    fallbackImg.src = 'FairwayOffice - HD 720p.mp4';
-    fallbackImg.alt = '';
-    fallbackImg.style.cssText =
-      'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
-    heroVideo.insertAdjacentElement('afterend', fallbackImg);
+    blocked = true;
+    heroVideo.poster = HERO_SRC;
+    heroVideo.removeAttribute('src');
+    heroVideo.load();
   }
-
-  heroVideo.addEventListener('playing', () => {
-    if (fallbackImg) {
-      fallbackImg.remove();
-      fallbackImg = null;
-    }
-  });
 
   function tryPlay() {
     if (!heroVideo.paused) return;
@@ -46,21 +39,26 @@
   heroVideo.addEventListener('loadedmetadata', tryPlay);
   heroVideo.addEventListener('canplay', tryPlay);
 
-  // Last resort: Safari blocks autoplay when the user has "Never
-  // Auto-Play" or the OS-level Reduce Motion setting enabled. With Reduce
-  // Motion the media is not even fetched (readyState 0), so force a
-  // load() before playing on the first interaction.
+  // First real user gesture: restore the src removed by the blocked-state
+  // fallback (play() keeps its user activation even while the media
+  // reloads), or force a load() if Safari never fetched the video.
   const kick = () => {
+    if (blocked && !heroVideo.getAttribute('src')) {
+      heroVideo.src = HERO_SRC;
+      heroVideo.load();
+      const p = heroVideo.play();
+      if (p) p.catch(() => {});
+      return;
+    }
     if (heroVideo.readyState === 0) heroVideo.load();
     tryPlay();
     if (!heroVideo.paused) {
       window.removeEventListener('pointerdown', kick);
-      window.removeEventListener('scroll', kick);
       window.removeEventListener('keydown', kick);
     }
   };
+  // Only events that grant user activation (scroll does not)
   window.addEventListener('pointerdown', kick, { passive: true });
-  window.addEventListener('scroll', kick, { passive: true });
   window.addEventListener('keydown', kick);
 })();
 
