@@ -9,20 +9,32 @@
   heroVideo.muted = true;
   heroVideo.playsInline = true;
 
-  // Safari renders an MP4 poster as an animated image (like a GIF), and
-  // images are exempt from the autoplay policy. When Safari refuses
-  // play(), showing the video itself as the poster keeps the hero moving
-  // until a real user gesture lets play() succeed.
-  let posterApplied = false;
+  // Safari renders an MP4 inside <img> as an animated image (like a GIF),
+  // and images are exempt from the autoplay policy. When Safari refuses
+  // play(), covering the video with an <img> of the same MP4 keeps the
+  // hero moving AND hides Safari's native play button (an image never has
+  // one). Removed as soon as a real user gesture lets play() succeed.
+  let fallbackImg = null;
   function applyAnimatedPoster() {
-    if (posterApplied) return;
+    if (fallbackImg) return;
     const isSafari = /^((?!chrome|android).)*safari/i.test(
       navigator.userAgent,
     );
     if (!isSafari) return;
-    heroVideo.poster = 'FairwayOffice - HD 720p.mp4';
-    posterApplied = true;
+    fallbackImg = document.createElement('img');
+    fallbackImg.src = 'FairwayOffice - HD 720p.mp4';
+    fallbackImg.alt = '';
+    fallbackImg.style.cssText =
+      'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+    heroVideo.insertAdjacentElement('afterend', fallbackImg);
   }
+
+  heroVideo.addEventListener('playing', () => {
+    if (fallbackImg) {
+      fallbackImg.remove();
+      fallbackImg = null;
+    }
+  });
 
   function tryPlay() {
     if (!heroVideo.paused) return;
