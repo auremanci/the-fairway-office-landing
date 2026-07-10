@@ -38,7 +38,20 @@
       probe.load();
       attachAndPlay();
     },
-    () => {
+    (e) => {
+      // Only NotAllowedError means the autoplay policy blocked playback.
+      // Anything else (e.g. AbortError from background power saving) is
+      // transient: attach the real media and retry when visible.
+      if (!e || e.name !== 'NotAllowedError') {
+        attachAndPlay();
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && heroVideo.paused) {
+            const p = heroVideo.play();
+            if (p) p.catch(() => {});
+          }
+        });
+        return;
+      }
       // Autoplay denied. Safari renders an MP4 poster as an animated
       // image (like a GIF), exempt from the autoplay policy, so the hero
       // keeps moving with no playable media and hence no play button.
