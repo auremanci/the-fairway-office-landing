@@ -114,6 +114,17 @@ h2.headline--cream {
   object-fit: cover;
 }
 
+/* Safari can paint a native play button over a video whose autoplay was
+   denied; keep every built-in control surface hidden on the hero */
+#hero video::-webkit-media-controls,
+#hero video::-webkit-media-controls-start-playback-button,
+#hero video::-webkit-media-controls-overlay-play-button,
+#hero video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+}
+
 .hero-shade {
   position: absolute;
   inset: 0;

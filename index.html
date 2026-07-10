@@ -15,11 +15,11 @@
   <body id="top">
     <!-- ── HERO ────────────────────────────────────── -->
     <section id="hero">
-      <!-- src directly on <video> (not <source> child): Safari's autoplay
-           evaluation can miss deferred source selection -->
+      <!-- No src at parse time: script.js probes the autoplay policy with a
+           detached video first. If Safari denies autoplay, the visible
+           element never enters the blocked state (which paints a permanent
+           native play button) and runs as an animated MP4 poster instead -->
       <video
-        src="FairwayOffice - HD 720p.mp4"
-        autoplay
         muted
         playsinline
         loop

@@ -1,65 +1,59 @@
-// Hero video autoplay enforcement (desktop Safari can reject declarative
-// autoplay even with muted+playsinline; an explicit play() call after the
-// media is ready succeeds where the attribute alone does not)
+// Hero video autoplay: the visible element starts with no src. A detached
+// probe video asks the browser whether muted autoplay is allowed. Only
+// then does the real element get its media — a visible video whose
+// autoplay was denied paints a permanent native play button in Safari,
+// and this way it never enters that state.
 (function () {
   const heroVideo = document.querySelector('#hero video');
   if (!heroVideo) return;
 
+  const HERO_SRC = 'FairwayOffice - HD 720p.mp4';
   heroVideo.defaultMuted = true;
   heroVideo.muted = true;
   heroVideo.playsInline = true;
 
-  // Safari renders an MP4 poster as an animated image (like a GIF), and
-  // images are exempt from the autoplay policy. When Safari refuses
-  // play(), the video itself becomes the poster so the hero keeps moving.
-  // Removing the src as well leaves the element with no playable media,
-  // so Safari has nothing to offer its native play button for; the real
-  // src comes back on the first user gesture, when play() is allowed.
-  const HERO_SRC = 'FairwayOffice - HD 720p.mp4';
-  let blocked = false;
-  function applyAnimatedPoster() {
-    if (blocked) return;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(
-      navigator.userAgent,
-    );
-    if (!isSafari) return;
-    blocked = true;
-    heroVideo.poster = HERO_SRC;
-    heroVideo.removeAttribute('src');
-    heroVideo.load();
-  }
-
-  function tryPlay() {
-    if (!heroVideo.paused) return;
+  function attachAndPlay() {
+    heroVideo.src = HERO_SRC;
     const p = heroVideo.play();
-    if (p) p.catch(applyAnimatedPoster);
+    if (p) p.catch(() => {});
   }
 
-  tryPlay();
-  heroVideo.addEventListener('loadedmetadata', tryPlay);
-  heroVideo.addEventListener('canplay', tryPlay);
+  const probe = document.createElement('video');
+  probe.defaultMuted = true;
+  probe.muted = true;
+  probe.playsInline = true;
+  probe.src = HERO_SRC;
 
-  // First real user gesture: restore the src removed by the blocked-state
-  // fallback (play() keeps its user activation even while the media
-  // reloads), or force a load() if Safari never fetched the video.
-  const kick = () => {
-    if (blocked && !heroVideo.getAttribute('src')) {
-      heroVideo.src = HERO_SRC;
-      heroVideo.load();
-      const p = heroVideo.play();
-      if (p) p.catch(() => {});
-      return;
-    }
-    if (heroVideo.readyState === 0) heroVideo.load();
-    tryPlay();
-    if (!heroVideo.paused) {
-      window.removeEventListener('pointerdown', kick);
-      window.removeEventListener('keydown', kick);
-    }
-  };
-  // Only events that grant user activation (scroll does not)
-  window.addEventListener('pointerdown', kick, { passive: true });
-  window.addEventListener('keydown', kick);
+  const attempt = probe.play();
+  if (!attempt) {
+    // Old browsers where play() returns undefined
+    attachAndPlay();
+    return;
+  }
+
+  attempt.then(
+    () => {
+      probe.pause();
+      probe.removeAttribute('src');
+      probe.load();
+      attachAndPlay();
+    },
+    () => {
+      // Autoplay denied. Safari renders an MP4 poster as an animated
+      // image (like a GIF), exempt from the autoplay policy, so the hero
+      // keeps moving with no playable media and hence no play button.
+      // Real playback starts on the first gesture that grants user
+      // activation (scroll does not).
+      heroVideo.poster = HERO_SRC;
+      const kick = () => {
+        attachAndPlay();
+        window.removeEventListener('pointerdown', kick);
+        window.removeEventListener('keydown', kick);
+      };
+      window.addEventListener('pointerdown', kick, { passive: true });
+      window.addEventListener('keydown', kick);
+    },
+  );
 })();
 
 // Scroll reveal
