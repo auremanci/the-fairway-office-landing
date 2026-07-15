@@ -1228,6 +1228,10 @@ footer {
     padding-right: 0;
   }
 
+  .app-copy .body-text {
+    max-width: 100%;
+  }
+
   #pricing-section {
     padding: 80px 6vw 120px;
   }
@@ -1406,12 +1410,12 @@ footer {
 
   .course-panel {
     position: relative;
-    height: 100svh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 48px 6vw;
+    padding: 100px 6vw;
     opacity: 1;
     pointer-events: auto;
     background-color: #000;
