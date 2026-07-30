@@ -182,7 +182,7 @@ h2.headline--cream {
   width: min(1198px, 92vw);
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(3rem, 5.42vw, 82px);
+  font-size: clamp(2.6rem, 5.42vw, 82px);
   line-height: 1.05;
   letter-spacing: 2px;
   text-align: center;

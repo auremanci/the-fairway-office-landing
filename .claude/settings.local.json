@@ -9,7 +9,8 @@
       "mcp__Claude_in_Chrome__get_page_text",
       "mcp__91e49575-c666-49bb-a6fc-6dd96d14f4a3__get_design_context",
       "mcp__Claude_Preview__preview_start",
-      "Bash(curl -sI -H \"Range: bytes=0-1023\" \"https://the-fairway-office-landing-production.up.railway.app/FairwayOffice%20-%20HD%20720p.mp4\")"
+      "Bash(curl -sI -H \"Range: bytes=0-1023\" \"https://the-fairway-office-landing-production.up.railway.app/FairwayOffice%20-%20HD%20720p.mp4\")",
+      "mcp__plugin_figma_figma__get_design_context"
     ]
   }
 }
