@@ -831,17 +831,28 @@ h2.courses-title.courses-title--small {
 
 .how-head {
   max-width: 1512px;
-  margin: 0 auto;
+  margin: 0 auto 440px;
 }
 
 .how-head h2 {
   margin: 56px 0 0 158px;
+  color: var(--gold);
 }
 
 .how-photo {
   position: relative;
-  background: url('assets/how-bg.png') top / cover no-repeat;
-  padding-top: 440px;
+  background: url('assets/how-bg.jpg') top / cover no-repeat;
+}
+
+.how-photo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 300px;
+  background: linear-gradient(to top, rgba(16, 39, 36, 0) 0%, #fff6e4 100%);
+  pointer-events: none;
 }
 
 .how-photo::after {
@@ -1562,9 +1573,7 @@ footer {
   .how-head h2 {
     margin-top: 48px;
   }
-  .how-photo {
-    padding-top: 220px;
-  }
+
   .how-card {
     grid-template-columns: 1fr;
     gap: 40px;
